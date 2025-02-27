@@ -4,6 +4,8 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import Header from "@/components/Header";
+import StoreProvider from "./StoreProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,13 +34,16 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="mx-4 w-full">
-              <Header />
-              {children}
-            </main>
-          </SidebarProvider>
+          <StoreProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <main className="mx-4 w-full">
+                <Header />
+                {children}
+              </main>
+              <Toaster/>
+            </SidebarProvider>
+          </StoreProvider>
         </ThemeProvider>
       </body>
     </html>

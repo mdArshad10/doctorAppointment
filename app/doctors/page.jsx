@@ -6,30 +6,22 @@ import { doctor } from "@/data/doctor";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Ellipsis, MoreHorizontal } from "lucide-react";
-import { SidebarMenuAction } from "@/components/ui/sidebar";
+import { Ellipsis } from "lucide-react";
+import BookAppointment from "@/components/book-appointment";
+import { useTheme } from "next-themes";
 
 const DoctorPage = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [doctorName, setDoctorName] = useState("");
+  const { setTheme } = useTheme();
   console.log(darkMode);
 
   const filterDoctorName = (e) => {
@@ -37,6 +29,12 @@ const DoctorPage = () => {
     // const filterDoctor = doctorName.filter((item)=> item )
   };
   console.log(doctorName);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    const theme = darkMode ? "light" : "dark";
+    setTheme(theme);
+  };
 
   return (
     <div className="w-full p-2">
@@ -47,7 +45,7 @@ const DoctorPage = () => {
             <Switch
               id="airplane-mode"
               checked={darkMode}
-              onCheckedChange={(e) => setDarkMode(!darkMode)}
+              onCheckedChange={toggleDarkMode}
             />
             <Label htmlFor="airplane-mode">
               {darkMode ? "Dark Mode" : "Light Mode"}
@@ -67,7 +65,7 @@ const DoctorPage = () => {
         </Button>
       </form>
       <div className="pt-5 grid grid-cols-4 gap-4">
-        {Array.from({ length: 8 }).map((item, index) => (
+        {doctor.map((item, index) => (
           <div key={index}>
             <Card>
               <CardHeader className="flex items-end">
@@ -84,17 +82,17 @@ const DoctorPage = () => {
               <CardContent className="flex items-center flex-col gap-3">
                 <Avatar className="w-[100px] h-[100px]">
                   <AvatarImage
-                    src="https://github.com/shadcn.png"
+                    src={item.url ? item.url : "https://github.com/shadcn.png"}
                     className="object-cover"
                   />
-                  <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <span className="font-bold text-xl">Arshad</span>
-                <span className="mt-[-10px]">Neuro surgon</span>
+                <span className="font-bold text-sm text-center">
+                  {item.doctorName}
+                </span>
+                <span className="mt-[-10px]">{item.doctorSpecialist}</span>
                 <Button className="w-[150px]">Chat</Button>
-                <Button className="w-[150px] bg-blue-600 text-gray-200">
-                  Book{" "}
-                </Button>
+
+                <BookAppointment doctorId={index} />
               </CardContent>
             </Card>
           </div>
