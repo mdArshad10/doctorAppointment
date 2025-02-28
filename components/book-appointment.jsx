@@ -33,6 +33,7 @@ import { Input } from "./ui/input";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import { addAppointment } from "@/lib/features/doctor/doctorSlice";
+import { getFormattedDate } from "@/lib/formattedDate";
 
 const timeZoneItem = [
   "09:00:00",
@@ -56,23 +57,19 @@ const BookAppointment = ({ doctorId }) => {
   const dispatch = useDispatch();
 
   const handleAppointmentTime = (value) => {
-    console.log(value);
-
     setTime(value);
   };
 
-  const bookAppointmentSubmit = (doctorId, checkup, date, time) => {
-    console.log("click on the submit appointment");
+  const bookAppointmentSubmit = ( checkup, date, time) => {
 
-    const newDate = new Date(date).toLocaleDateString().replace("/", "-");
+    const newDate = getFormattedDate(date);
     const startDate = `${newDate}T${time}`;
 
     const value = {
-      doctorId,
       title: checkup,
       start: startDate,
     };
-    // console.log(value);
+
     dispatch(addAppointment({ ...value }));
     toast.success("Appointment is booked");
   };
@@ -143,8 +140,10 @@ const BookAppointment = ({ doctorId }) => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {timeZoneItem.map((item) => (
-                    <SelectItem value={item}>{item}</SelectItem>
+                  {timeZoneItem.map((item, index) => (
+                    <SelectItem value={item} key={index}>
+                      {item}
+                    </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
@@ -156,7 +155,7 @@ const BookAppointment = ({ doctorId }) => {
             <Button
               type="button"
               onClick={() =>
-                bookAppointmentSubmit(doctorId, checkup, date, time)
+                bookAppointmentSubmit(checkup, date, time)
               }
             >
               Book Appointment

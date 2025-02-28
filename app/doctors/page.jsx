@@ -1,9 +1,9 @@
 "use client";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import React, { useState } from "react";
+import { useState } from "react";
 import { doctor } from "@/data/doctor";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -15,20 +15,34 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Ellipsis } from "lucide-react";
-import BookAppointment from "@/components/book-appointment";
 import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
+
+const BookAppointment = dynamic(() => import("@/components/book-appointment"), {
+  loading: () => <div className="flex items-center">Loading...</div>,
+  ssr: false,
+});
 
 const DoctorPage = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [doctorName, setDoctorName] = useState("");
+  const [doctorDetails, setDoctorDetails] = useState([...doctor]);
   const { setTheme } = useTheme();
-  console.log(darkMode);
 
   const filterDoctorName = (e) => {
     e.preventDefault();
-    // const filterDoctor = doctorName.filter((item)=> item )
+    let filterDoctor;
+    if (doctorName == "") {
+      filterDoctor = [...doctor];
+    } else {
+      filterDoctor = doctorDetails.filter((item) =>
+        item.doctorName.includes(doctorName.toUpperCase())
+      );
+    }
+    console.log(filterDoctor);
+
+    setDoctorDetails(filterDoctor);
   };
-  console.log(doctorName);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -60,43 +74,50 @@ const DoctorPage = () => {
           onChange={(e) => setDoctorName(e.target.value)}
           placeholder="Enter the doctor name"
         />
-        <Button type="submit" onSubmit={filterDoctorName}>
+        <Button type="button" onClick={filterDoctorName}>
           Search
         </Button>
       </form>
-      <div className="pt-5 grid grid-cols-4 gap-4">
-        {doctor.map((item, index) => (
-          <div key={index}>
-            <Card>
-              <CardHeader className="flex items-end">
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <Ellipsis />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </CardHeader>
-              <CardContent className="flex items-center flex-col gap-3">
-                <Avatar className="w-[100px] h-[100px]">
-                  <AvatarImage
-                    src={item.url ? item.url : "https://github.com/shadcn.png"}
-                    className="object-cover"
-                  />
-                </Avatar>
-                <span className="font-bold text-sm text-center">
-                  {item.doctorName}
-                </span>
-                <span className="mt-[-10px]">{item.doctorSpecialist}</span>
-                <Button className="w-[150px]">Chat</Button>
+      <div className="pt-5 grid grid-cols-2 gap-4  md:grid-cols-3 lg:grid-cols-4">
+        {doctorDetails.length == 0 ? (
+          <p>No Doctor is present</p>
+        ) : (
+          doctorDetails.map((item, index) => (
+            <div key={index}>
+              <Card>
+                <CardHeader className="flex items-end">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Ellipsis />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </CardHeader>
+                <CardContent className="flex items-center flex-col gap-3">
+                  <Avatar className="w-[100px] h-[100px]">
+                    <AvatarImage
+                      src={
+                        item.url ? item.url : "https://github.com/shadcn.png"
+                      }
+                      className="object-cover"
+                      alt={item.doctorName}
+                    />
+                  </Avatar>
+                  <span className="font-bold text-sm text-center">
+                    {item.doctorName}
+                  </span>
+                  <span className="mt-[-10px]">{item.doctorSpecialist}</span>
+                  <Button className="w-[150px]">Chat</Button>
 
-                <BookAppointment doctorId={index} />
-              </CardContent>
-            </Card>
-          </div>
-        ))}
+                  <BookAppointment doctorId={index} />
+                </CardContent>
+              </Card>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

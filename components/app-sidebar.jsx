@@ -40,7 +40,7 @@ const items = [
   },
   {
     title: "Chats",
-    url: "#",
+    url: "/chats",
     icon: Search,
   },
 ];
@@ -63,10 +63,8 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div>
-          <Image src={""} />
           <span>Doctor</span>
         </div>
-        <div>hi</div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

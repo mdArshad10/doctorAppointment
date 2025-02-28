@@ -4,7 +4,7 @@ import doctorReducer from '@/lib/features/doctor/doctorSlice'
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      appointment: doctorReducer
+      appointmentReducer: doctorReducer
     },
   });
 };

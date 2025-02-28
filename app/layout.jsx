@@ -3,7 +3,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
-import Header from "@/components/Header";
 import StoreProvider from "./StoreProvider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -37,11 +36,10 @@ export default function RootLayout({ children }) {
           <StoreProvider>
             <SidebarProvider>
               <AppSidebar />
-              <main className="mx-4 w-full">
-                <Header />
+              <main className="mx-4 w-full my-10" >
                 {children}
               </main>
-              <Toaster/>
+              <Toaster />
             </SidebarProvider>
           </StoreProvider>
         </ThemeProvider>
