@@ -1,5 +1,5 @@
 "use Client";
-import React from "react";
+import React, { useState } from "react";
 import {
   momentLocalizer,
   Views,
@@ -13,15 +13,16 @@ const localizer = momentLocalizer(moment);
 
 const initProps = {
   localizer: localizer,
-  defaultView: Views.MONTH,
-  max: moment("2022-10-10T16:00:00").toDate(),
-  min: moment("2022-10-10T08:00:00").toDate(),
+  max: moment("2025-12-30T16:00:00").toDate(),
+  min: moment("2025-01-01T08:00:00").toDate(),
   step: 15,
   timeslots: 4,
 };
 
 
 const CalendarComponent = ({ onShowAppointmentView }) => {
+  const [view, setView] = useState(Views.MONTH);
+  const [date, setDate] = useState(new Date());
   const data = useSelector((store) => store.appointmentReducer.appointments);
   const components = {
     event: ({ event }) => {
@@ -52,9 +53,15 @@ const CalendarComponent = ({ onShowAppointmentView }) => {
         appointment && onShowAppointmentView(appointment);
       }}
       events={appointments}
-      defaultDate={"2025-02-28"}
-      views={["month", "day", "week"]}
       style={{ width: "100%" }}
+      views={[Views.MONTH, Views.WEEK, Views.DAY]}
+      defaultView={view}
+      view={view}
+      date={date}
+      onView={(view) => setView(view)}
+      onNavigate={(date) => {
+        setDate(new Date(date));
+      }}
       components={components}
       selectable
       {...initProps}

@@ -36,7 +36,11 @@ export default function RootLayout({ children }) {
           <StoreProvider>
             <SidebarProvider>
               <AppSidebar />
-              <main className="mx-4 w-full my-10" >
+              <main
+                className="mx-4 w-full my-10 light"
+                data-new-gr-c-s-check-load="14.1209.0"
+                data-gr-ext-install=""
+              >
                 {children}
               </main>
               <Toaster />

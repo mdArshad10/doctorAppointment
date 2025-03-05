@@ -8,7 +8,7 @@ import EventForm from "@/components/EventForm/EventForm";
 
 const ChatPage = () => {
   const [appointment, setAppointment] = useState();
-
+  
   return (
     <div>
       <div className="h-[90vh]">
